@@ -5,28 +5,66 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.decomposition import TruncatedSVD
 
-# --- Page Config ---
-st.set_page_config(page_title="CineMatch Pro", page_icon="🍿", layout="wide")
+# --- 1. MANDATORY PAGE CONFIG (Forcing Dark & Wide) ---
+st.set_page_config(
+    page_title="CineMatch Ultimate", 
+    page_icon="🚀", 
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
 
-# --- Premium Styling ---
+# --- 2. PREMIUM STYLING & DARK MODE LOCK ---
 st.markdown("""
     <style>
-    .main { background-color: #0b0e14; }
+    /* Force Dark Background for the whole app */
+    .stApp {
+        background-color: #0b0e14;
+        color: #fafafa;
+    }
+    
+    /* Custom Styling for Dashboard Elements */
     .stTabs [data-baseweb="tab-list"] { gap: 10px; background-color: #0b0e14; }
-    .stTabs [data-baseweb="tab"] { height: 45px; background-color: #1f2937; border-radius: 5px; color: white; }
+    .stTabs [data-baseweb="tab"] { 
+        height: 45px; 
+        background-color: #1f2937; 
+        border-radius: 5px; 
+        color: white; 
+    }
+    
     .movie-card {
         background: linear-gradient(145deg, #1e293b, #0f172a);
-        padding: 15px; border-radius: 12px; border-bottom: 3px solid #e11d48;
-        margin-bottom: 15px; height: 185px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        padding: 15px; 
+        border-radius: 12px; 
+        border-bottom: 3px solid #e11d48;
+        margin-bottom: 15px; 
+        height: 185px; 
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
     }
+    
     .rank-badge {
-        background-color: #e11d48; color: white; padding: 2px 8px; 
-        border-radius: 4px; font-size: 10px; font-weight: bold;
+        background-color: #e11d48; 
+        color: white; 
+        padding: 2px 8px; 
+        border-radius: 4px; 
+        font-size: 10px; 
+        font-weight: bold;
     }
-    .metric-box { background-color: #1e293b; padding: 20px; border-radius: 15px; text-align: center; border: 1px solid #334155; }
+    
+    .metric-box { 
+        background-color: #1e293b; 
+        padding: 20px; 
+        border-radius: 15px; 
+        text-align: center; 
+        border: 1px solid #334155; 
+    }
+    
     .info-callout {
-        background-color: rgba(30, 58, 138, 0.3); border-left: 5px solid #3b82f6;
-        padding: 15px; border-radius: 5px; color: #93c5fd; font-size: 13px;
+        background-color: rgba(30, 58, 138, 0.3); 
+        border-left: 5px solid #3b82f6;
+        padding: 15px; 
+        border-radius: 5px; 
+        color: #93c5fd; 
+        font-size: 13px;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -68,7 +106,7 @@ engine = CineMatchPro()
 
 st.title("🚀 CineMatch Ultimate | Hybrid Intelligence")
 
-# Added the 4th tab for Model Evaluation
+# Tabs Setup
 tabs = st.tabs(["📊 Executive Dashboard", "🎯 Hybrid Predictor", "📈 Analytics Reports", "🧪 Model Evaluation"])
 
 with tabs[0]:
@@ -120,7 +158,7 @@ with tabs[2]:
         fig_radar = go.Figure(data=go.Scatterpolar(r=values, theta=categories, fill='toself', line_color='#e11d48'))
         fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 10])), showlegend=False, 
                                 title="User Genre Affinity", template="plotly_dark")
-        st.plotly_chart(fig_radar, width='stretch')
+        st.plotly_chart(fig_radar, use_container_width=True)
             
     with col_b:
         st.markdown("#### Intelligence Summary")
@@ -136,12 +174,10 @@ with tabs[2]:
     b3.markdown('<div style="background-color:#fee2e2; color:#991b1b; padding:10px; border-radius:10px; text-align:center;"><b>Risk Level</b><br>High</div>', unsafe_allow_html=True)
     b4.markdown('<div style="background-color:#e0e7ff; color:#3730a3; padding:10px; border-radius:10px; text-align:center;"><b>Retention</b><br>14.0%</div>', unsafe_allow_html=True)
 
-# --- NEW TAB: MODEL EVALUATION ---
 with tabs[3]:
     st.markdown("### Model Performance Comparison")
     st.info("Results based on 5-Fold Cross Validation on MovieLens 100k Dataset.")
 
-    # Benchmarking Data
     eval_data = {
         "Method": ["User-Based CF", "Item-Based CF", "SVD (Matrix Factorization)"],
         "RMSE (Error)": [1.0200, 0.9800, 0.8900],
@@ -150,11 +186,8 @@ with tabs[3]:
     }
     
     df_eval = pd.DataFrame(eval_data)
-    
-    # Styled Table Display
     st.table(df_eval)
 
-    # Technical Explanation for the Exam
     st.markdown("""
         <div class="info-callout">
         <b>Precision@K Explanation:</b> This measures the proportion of recommended items in the top-K set that are actually relevant to the user. 
@@ -162,7 +195,6 @@ with tabs[3]:
         </div>
     """, unsafe_allow_html=True)
 
-    # Visualizing Accuracy
     fig_eval = px.bar(df_eval, x="Method", y="RMSE (Error)", color="Method", 
                       title="Lower Error (RMSE) is Better", template="plotly_dark",
                       color_discrete_sequence=['#6366f1', '#8b5cf6', '#e11d48'])
