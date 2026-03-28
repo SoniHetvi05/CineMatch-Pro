@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 2. PREMIUM STYLING (RESTORING ORIGINAL COLORS) ---
+# --- 2. PREMIUM STYLING (STEALTH DARK MODE) ---
 st.markdown("""
     <style>
     /* Force Dark Background for the whole app window */
@@ -21,62 +21,68 @@ st.markdown("""
         background-color: #0b0e14;
     }
     
-    /* Fix for the white input box while keeping text sharp */
-    .stNumberInput div[data-baseweb="input"] {
-        background-color: #1e293b !important;
+    /* Make Input Box and Buttons BLACK to blend in */
+    .stNumberInput div[data-baseweb="input"], 
+    .stNumberInput div[data-baseweb="input"] input,
+    button[kind="secondary"] {
+        background-color: #000000 !important;
+        border: 1px solid #1e293b !important;
+        color: #475569 !important; /* Subtle grey text for input */
     }
-    .stNumberInput input {
+
+    /* Make the 'Generate' button black and subtle */
+    div.stButton > button {
+        background-color: #000000 !important;
+        color: #64748b !important;
+        border: 1px solid #1e293b !important;
+        transition: 0.3s;
+    }
+    div.stButton > button:hover {
+        border-color: #e11d48 !important;
         color: white !important;
     }
     
-    /* Custom Styling for Dashboard Elements */
+    /* Custom Styling for Tabs */
     .stTabs [data-baseweb="tab-list"] { gap: 10px; background-color: #0b0e14; }
     .stTabs [data-baseweb="tab"] { 
         height: 45px; 
-        background-color: #1f2937; 
+        background-color: #000000; 
         border-radius: 5px; 
-        color: white; 
+        color: #475569; /* Subtle tab text */
     }
     
+    /* Movie Cards */
     .movie-card {
-        background: linear-gradient(145deg, #1e293b, #0f172a);
+        background: linear-gradient(145deg, #0f172a, #000000);
         padding: 15px; 
         border-radius: 12px; 
-        border-bottom: 3px solid #e11d48;
+        border-bottom: 2px solid #e11d48;
         margin-bottom: 15px; 
         height: 185px; 
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
     }
     
+    /* Making all General Text VERY light and subtle */
+    h1, h2, h3, p, span, label {
+        color: #64748b !important; /* Dimmed text color */
+        font-weight: 300 !important;
+    }
+
+    /* Keep the Score and Rank a bit more visible */
     .rank-badge {
         background-color: #e11d48; 
-        color: white; 
+        color: white !important; 
         padding: 2px 8px; 
         border-radius: 4px; 
         font-size: 10px; 
-        font-weight: bold;
     }
     
     .metric-box { 
-        background-color: #1e293b; 
+        background-color: #000000; 
         padding: 20px; 
         border-radius: 15px; 
         text-align: center; 
-        border: 1px solid #334155; 
-    }
-    
-    /* Restoring the original specific colors for titles and text */
-    h1, h2, h3, .stMarkdown p {
-        color: white;
-    }
-    
-    .info-callout {
-        background-color: rgba(30, 58, 138, 0.3); 
-        border-left: 5px solid #3b82f6;
-        padding: 15px; 
-        border-radius: 5px; 
-        color: #93c5fd; 
-        font-size: 13px;
+        border: 1px solid #1e293b; 
     }
     </style>
     """, unsafe_allow_html=True)
