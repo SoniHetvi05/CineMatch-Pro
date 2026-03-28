@@ -5,7 +5,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.decomposition import TruncatedSVD
 
-# --- 1. MANDATORY PAGE CONFIG (Forcing Dark & Wide) ---
+# --- 1. MANDATORY PAGE CONFIG ---
 st.set_page_config(
     page_title="CineMatch Ultimate", 
     page_icon="🚀", 
@@ -20,6 +20,16 @@ st.markdown("""
     .stApp {
         background-color: #0b0e14;
         color: #fafafa;
+    }
+    
+    /* Fix for the white input box and number buttons */
+    .stNumberInput div[data-baseweb="input"] {
+        background-color: #1e293b !important;
+        color: white !important;
+    }
+    .stNumberInput button {
+        background-color: #334155 !important;
+        color: white !important;
     }
     
     /* Custom Styling for Dashboard Elements */
@@ -65,6 +75,11 @@ st.markdown("""
         border-radius: 5px; 
         color: #93c5fd; 
         font-size: 13px;
+    }
+
+    /* Force all text in the app to be white/off-white */
+    body, p, span, label, h1, h2, h3 {
+        color: #fafafa !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -120,9 +135,13 @@ with tabs[0]:
     st.write("###")
     col_l, col_r = st.columns(2)
     with col_l:
-        st.plotly_chart(px.histogram(engine.ratings, x="rating", title="Rating Density", color_discrete_sequence=['#e11d48'], template="plotly_dark"), use_container_width=True)
+        fig1 = px.histogram(engine.ratings, x="rating", title="Rating Density", color_discrete_sequence=['#e11d48'], template="plotly_dark")
+        fig1.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(fig1, use_container_width=True)
     with col_r:
-        st.plotly_chart(px.line(engine.ratings.groupby('movieId').count().sort_values('rating', ascending=False).reset_index(), y="rating", title="Demand Curve", color_discrete_sequence=['#6366f1'], template="plotly_dark"), use_container_width=True)
+        fig2 = px.line(engine.ratings.groupby('movieId').count().sort_values('rating', ascending=False).reset_index(), y="rating", title="Demand Curve", color_discrete_sequence=['#6366f1'], template="plotly_dark")
+        fig2.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+        st.plotly_chart(fig2, use_container_width=True)
 
 with tabs[1]:
     st.markdown("### Hybrid Recommendation Engine")
@@ -156,8 +175,17 @@ with tabs[2]:
         values = np.random.randint(4, 10, size=6)
         
         fig_radar = go.Figure(data=go.Scatterpolar(r=values, theta=categories, fill='toself', line_color='#e11d48'))
-        fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 10])), showlegend=False, 
-                                title="User Genre Affinity", template="plotly_dark")
+        fig_radar.update_layout(
+            polar=dict(
+                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#475569"),
+                angularaxis=dict(gridcolor="#475569")
+            ),
+            showlegend=False, 
+            title="User Genre Affinity",
+            template="plotly_dark",
+            paper_bgcolor='rgba(0,0,0,0)', 
+            plot_bgcolor='rgba(0,0,0,0)'
+        )
         st.plotly_chart(fig_radar, use_container_width=True)
             
     with col_b:
@@ -198,4 +226,5 @@ with tabs[3]:
     fig_eval = px.bar(df_eval, x="Method", y="RMSE (Error)", color="Method", 
                       title="Lower Error (RMSE) is Better", template="plotly_dark",
                       color_discrete_sequence=['#6366f1', '#8b5cf6', '#e11d48'])
+    fig_eval.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
     st.plotly_chart(fig_eval, use_container_width=True)
