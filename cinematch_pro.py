@@ -13,22 +13,19 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 2. PREMIUM STYLING & DARK MODE LOCK ---
+# --- 2. PREMIUM STYLING (RESTORING ORIGINAL COLORS) ---
 st.markdown("""
     <style>
-    /* Force Dark Background for the whole app */
+    /* Force Dark Background for the whole app window */
     .stApp {
         background-color: #0b0e14;
-        color: #fafafa;
     }
     
-    /* Fix for the white input box and number buttons */
+    /* Fix for the white input box while keeping text sharp */
     .stNumberInput div[data-baseweb="input"] {
         background-color: #1e293b !important;
-        color: white !important;
     }
-    .stNumberInput button {
-        background-color: #334155 !important;
+    .stNumberInput input {
         color: white !important;
     }
     
@@ -68,6 +65,11 @@ st.markdown("""
         border: 1px solid #334155; 
     }
     
+    /* Restoring the original specific colors for titles and text */
+    h1, h2, h3, .stMarkdown p {
+        color: white;
+    }
+    
     .info-callout {
         background-color: rgba(30, 58, 138, 0.3); 
         border-left: 5px solid #3b82f6;
@@ -75,11 +77,6 @@ st.markdown("""
         border-radius: 5px; 
         color: #93c5fd; 
         font-size: 13px;
-    }
-
-    /* Force all text in the app to be white/off-white */
-    body, p, span, label, h1, h2, h3 {
-        color: #fafafa !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -135,12 +132,13 @@ with tabs[0]:
     st.write("###")
     col_l, col_r = st.columns(2)
     with col_l:
+        # Transparent Background and Sharp Text
         fig1 = px.histogram(engine.ratings, x="rating", title="Rating Density", color_discrete_sequence=['#e11d48'], template="plotly_dark")
-        fig1.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+        fig1.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font=dict(color="white"))
         st.plotly_chart(fig1, use_container_width=True)
     with col_r:
         fig2 = px.line(engine.ratings.groupby('movieId').count().sort_values('rating', ascending=False).reset_index(), y="rating", title="Demand Curve", color_discrete_sequence=['#6366f1'], template="plotly_dark")
-        fig2.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+        fig2.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font=dict(color="white"))
         st.plotly_chart(fig2, use_container_width=True)
 
 with tabs[1]:
@@ -177,11 +175,11 @@ with tabs[2]:
         fig_radar = go.Figure(data=go.Scatterpolar(r=values, theta=categories, fill='toself', line_color='#e11d48'))
         fig_radar.update_layout(
             polar=dict(
-                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#475569"),
-                angularaxis=dict(gridcolor="#475569")
+                radialaxis=dict(visible=True, range=[0, 10], gridcolor="#475569", tickfont=dict(color="white")),
+                angularaxis=dict(gridcolor="#475569", tickfont=dict(color="white"))
             ),
             showlegend=False, 
-            title="User Genre Affinity",
+            title=dict(text="User Genre Affinity", font=dict(color="white")),
             template="plotly_dark",
             paper_bgcolor='rgba(0,0,0,0)', 
             plot_bgcolor='rgba(0,0,0,0)'
@@ -226,5 +224,5 @@ with tabs[3]:
     fig_eval = px.bar(df_eval, x="Method", y="RMSE (Error)", color="Method", 
                       title="Lower Error (RMSE) is Better", template="plotly_dark",
                       color_discrete_sequence=['#6366f1', '#8b5cf6', '#e11d48'])
-    fig_eval.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
+    fig_eval.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font=dict(color="white"))
     st.plotly_chart(fig_eval, use_container_width=True)
